@@ -1,5 +1,7 @@
 package org.jenkinsci.plugins.eventstore.publishing;
 
+import org.jenkinsci.plugins.eventstore.events.Event;
+
 import java.util.logging.Logger;
 
 public final class EventstorePublisher {
@@ -14,7 +16,7 @@ public final class EventstorePublisher {
         LOG.info(String.format("Connecting to eventstore at %s:%s", eventstoreHost, eventstorePort));
     }
 
-    public void send(String event) {
+    public void send(Event event) {
         System.out.println(eventstoreHost + ":" + eventstorePort + " => " + event);
     }
 }
