@@ -1,16 +1,19 @@
 # IntelliJ
-.idea/
+/.idea/
 *.iml
 *.iws
 
 # Eclipse
-.classpath
-.project
-.settings/
-bin/
+/.classpath
+/.project
+/.settings/
+/bin/
 
 # Maven
-target/
+/target/
 
 # MacOS
-.DS_Store
+/.DS_Store
+
+#Jenkins
+/work/
