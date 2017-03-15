@@ -19,6 +19,7 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
     public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
         eventstoreHost = json.getString("eventstoreHost");
         eventstorePort = json.getInt("eventstorePort");
+        save();
         return true;
     }
 
