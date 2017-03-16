@@ -9,8 +9,7 @@ import org.kohsuke.stapler.StaplerRequest;
 @Extension
 public final class EventstoreConfiguration extends GlobalConfiguration {
 
-    private String eventstoreHost;
-    private int eventstorePort;
+    private String eventstoreUrl;
 
     private EventstorePublisher publisher;
 
@@ -21,27 +20,17 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
 
     @Override
     public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
-        eventstoreHost = json.getString("eventstoreHost");
-        eventstorePort = json.getInt("eventstorePort");
+        eventstoreUrl = json.getString("eventstoreUrl");
         saveAndCreatePublisher();
         return true;
     }
 
-    public String getEventstoreHost() {
-        return eventstoreHost;
+    public String getEventstoreUrl() {
+        return eventstoreUrl;
     }
 
-    public void setEventstoreHost(String eventstoreHost) {
-        this.eventstoreHost = eventstoreHost;
-        saveAndCreatePublisher();
-    }
-
-    public int getEventstorePort() {
-        return eventstorePort;
-    }
-
-    public void setEventstorePort(int eventstorePort) {
-        this.eventstorePort = eventstorePort;
+    public void setEventstoreUrl(String eventstoreUrl) {
+        this.eventstoreUrl = eventstoreUrl;
         saveAndCreatePublisher();
     }
 
@@ -55,7 +44,7 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
     }
 
     private void createPublisher() {
-        this.publisher = new EventstorePublisher("http://" + eventstoreHost + ":" + eventstorePort);
+        this.publisher = new EventstorePublisher(eventstoreUrl);
     }
 
     public static EventstorePublisher getPublisher() {
