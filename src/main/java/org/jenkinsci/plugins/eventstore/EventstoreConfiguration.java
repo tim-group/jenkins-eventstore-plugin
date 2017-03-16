@@ -12,14 +12,18 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
     private String eventstoreHost;
     private int eventstorePort;
 
+    private EventstorePublisher publisher;
+
     public EventstoreConfiguration() {
-        this.load();
+        load();
+        createPublisher();
     }
 
+    @Override
     public boolean configure(StaplerRequest req, JSONObject json) throws FormException {
         eventstoreHost = json.getString("eventstoreHost");
         eventstorePort = json.getInt("eventstorePort");
-        save();
+        saveAndCreatePublisher();
         return true;
     }
 
@@ -29,7 +33,7 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
 
     public void setEventstoreHost(String eventstoreHost) {
         this.eventstoreHost = eventstoreHost;
-        this.save();
+        saveAndCreatePublisher();
     }
 
     public int getEventstorePort() {
@@ -38,16 +42,24 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
 
     public void setEventstorePort(int eventstorePort) {
         this.eventstorePort = eventstorePort;
-        this.save();
+        saveAndCreatePublisher();
     }
 
-    public static EventstoreConfiguration get() {
+    private static EventstoreConfiguration get() {
         return (EventstoreConfiguration)GlobalConfiguration.all().get(EventstoreConfiguration.class);
     }
 
+    private void saveAndCreatePublisher() {
+        save();
+        createPublisher();
+    }
+
+    private void createPublisher() {
+        this.publisher = new EventstorePublisher(eventstoreHost, eventstorePort);
+    }
+
     public static EventstorePublisher getPublisher() {
-        EventstoreConfiguration eventstoreConfiguration = get();
-        return new EventstorePublisher(eventstoreConfiguration.eventstoreHost, eventstoreConfiguration.eventstorePort);
+        return get().publisher;
     }
 
 }
