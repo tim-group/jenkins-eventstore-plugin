@@ -2,46 +2,81 @@ package org.jenkinsci.plugins.eventstore.listeners;
 
 import hudson.Extension;
 import hudson.model.Queue;
+import org.jenkinsci.plugins.eventstore.DateUtil;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
 import org.jenkinsci.plugins.eventstore.events.Event;
-import org.jenkinsci.plugins.eventstore.events.QueueEventHappened;
+import org.jenkinsci.plugins.eventstore.events.queue.*;
 
 @Extension
 public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onEnterWaiting(Queue.WaitingItem wi) {
-        emit(new QueueEventHappened("QueueListener.onEnterWaiting"));
+        emit(new EnteredWaitingQueue(
+                wi.getId(),
+                wi.task.getName(),
+                wi.getInQueueSince(),
+                wi.timestamp.getTimeInMillis()
+        ));
     }
 
     @Override
     public void onLeaveWaiting(Queue.WaitingItem wi) {
-        emit(new QueueEventHappened("QueueListener.onLeaveWaiting"));
+        emit(new LeftWaitingQueue(
+                wi.getId(),
+                wi.task.getName(),
+                wi.getInQueueSince(),
+                wi.timestamp.getTimeInMillis()
+        ));
     }
 
     @Override
     public void onEnterBlocked(Queue.BlockedItem bi) {
-        emit(new QueueEventHappened("QueueListener.onEnterBlocked"));
+        emit(new EnteredBlockedQueue(
+                bi.getId(),
+                bi.task.getName(),
+                bi.getInQueueSince(),
+                bi.buildableStartMilliseconds
+        ));
     }
 
     @Override
     public void onLeaveBlocked(Queue.BlockedItem bi) {
-        emit(new QueueEventHappened("QueueListener.onLeaveBlocked"));
+        emit(new LeftBlockedQueue(
+                bi.getId(),
+                bi.task.getName(),
+                bi.getInQueueSince(),
+                bi.buildableStartMilliseconds
+        ));
     }
 
     @Override
     public void onEnterBuildable(Queue.BuildableItem bi) {
-        emit(new QueueEventHappened("QueueListener.onEnterBuildable"));
+        emit(new EnteredBuildableQueue(
+                bi.getId(),
+                bi.task.getName(),
+                bi.getInQueueSince(),
+                bi.buildableStartMilliseconds
+        ));
     }
 
     @Override
     public void onLeaveBuildable(Queue.BuildableItem bi) {
-        emit(new QueueEventHappened("QueueListener.onLeaveBuildable"));
+        emit(new LeftBuildableQueue(
+                bi.getId(),
+                bi.task.getName(),
+                bi.getInQueueSince(),
+                bi.buildableStartMilliseconds
+        ));
     }
 
     @Override
     public void onLeft(Queue.LeftItem li) {
-        emit(new QueueEventHappened("QueueListener.onLeft"));
+        emit(new LeftQueue(
+                li.getId(),
+                li.task.getName(),
+                li.getInQueueSince()
+        ));
     }
 
     private void emit(Event event) {
