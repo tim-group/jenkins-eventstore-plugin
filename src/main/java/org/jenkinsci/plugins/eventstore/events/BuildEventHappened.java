@@ -2,7 +2,7 @@ package org.jenkinsci.plugins.eventstore.events;
 
 public class BuildEventHappened implements Event {
 
-    private final String message;
+    public final String message;
 
     public BuildEventHappened(String message) {
         this.message = message;

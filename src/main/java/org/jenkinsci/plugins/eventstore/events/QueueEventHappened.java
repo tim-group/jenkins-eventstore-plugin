@@ -2,7 +2,7 @@ package org.jenkinsci.plugins.eventstore.events;
 
 public class QueueEventHappened implements Event {
 
-    private final String message;
+    public final String message;
 
     public QueueEventHappened(String message) {
         this.message = message;
