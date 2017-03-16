@@ -1,11 +1,9 @@
 package org.jenkinsci.plugins.eventstore.listeners;
 
 import hudson.Extension;
-import hudson.model.AbstractBuild;
 import hudson.model.Job;
 import hudson.model.Queue;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
-import org.jenkinsci.plugins.eventstore.events.Event;
 import org.jenkinsci.plugins.eventstore.events.StreamId;
 import org.jenkinsci.plugins.eventstore.events.queue.*;
 
@@ -109,11 +107,11 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
         }
     }
 
-    private void emit(Queue.Item item, Event event) {
-        EventstoreConfiguration.getPublisher().send(new StreamId("queue", item.task.getName() + "-" + item.getInQueueSince() + "-" + item.getId()), event);
+    private void emit(Queue.Item item, QueueEvent event) {
+        EventstoreConfiguration.getPublisher().send(new StreamId("queue", item.task.getName() + "-" + event.queueId), event);
     }
 
-    private void emit(Job job, Event event) {
+    private void emit(Job job, QueueEvent event) {
         EventstoreConfiguration.getPublisher().send(new StreamId("build", job.getName() + "-" + job.getNextBuildNumber()), event);
     }
 

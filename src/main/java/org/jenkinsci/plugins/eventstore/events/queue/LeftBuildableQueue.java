@@ -1,20 +1,13 @@
 package org.jenkinsci.plugins.eventstore.events.queue;
 
-import org.jenkinsci.plugins.eventstore.events.Event;
-
 import static org.jenkinsci.plugins.eventstore.DateUtil.epochToIsoDateString;
 
-public final class LeftBuildableQueue implements Event {
+public final class LeftBuildableQueue extends QueueEvent {
 
-    public final long queueId;
-    public final String jobName;
-    public final String enteredQueueTimestamp;
     public final String buildableStartTimestamp;
 
     public LeftBuildableQueue(long queueId, String jobName, long inQueueSinceMillis, long buildableStartMillis) {
-        this.queueId = queueId;
-        this.jobName = jobName;
-        this.enteredQueueTimestamp = epochToIsoDateString(inQueueSinceMillis);
+        super(queueId, jobName, inQueueSinceMillis);
         this.buildableStartTimestamp = epochToIsoDateString(buildableStartMillis);
     }
 
