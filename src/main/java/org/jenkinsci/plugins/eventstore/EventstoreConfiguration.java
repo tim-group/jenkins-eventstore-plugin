@@ -3,6 +3,8 @@ package org.jenkinsci.plugins.eventstore;
 import hudson.Extension;
 import jenkins.model.GlobalConfiguration;
 import net.sf.json.JSONObject;
+import org.jenkinsci.plugins.eventstore.events.Event;
+import org.jenkinsci.plugins.eventstore.events.StreamId;
 import org.jenkinsci.plugins.eventstore.publishing.EventstorePublisher;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -44,11 +46,21 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
     }
 
     private void createPublisher() {
-        this.publisher = new EventstorePublisher(eventstoreUrl);
+        if (isValid(eventstoreUrl)) {
+            this.publisher = new EventstorePublisher(eventstoreUrl);
+        } else {
+            this.publisher = null;
+        }
     }
 
-    public static EventstorePublisher getPublisher() {
-        return get().publisher;
+    private static boolean isValid(String url) {
+        return url != null;
     }
 
+    public static void send(StreamId streamId, Event event) {
+        EventstorePublisher publisher = get().publisher;
+        if (publisher != null) {
+            publisher.send(streamId, event);
+        }
+    }
 }

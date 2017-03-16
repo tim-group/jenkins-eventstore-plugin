@@ -41,7 +41,7 @@ public final class BuildStepListener extends hudson.model.BuildStepListener {
     }
 
     private void emit(AbstractBuild build, Event event) {
-        EventstoreConfiguration.getPublisher().send(new StreamId("build", build.getProject().getFullName() + "-" + build.getNumber()), event);
+        EventstoreConfiguration.send(new StreamId("build", build.getProject().getFullName() + "-" + build.getNumber()), event);
     }
     
 }

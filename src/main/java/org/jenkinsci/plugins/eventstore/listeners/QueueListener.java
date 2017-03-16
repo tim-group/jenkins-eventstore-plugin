@@ -108,11 +108,11 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
     }
 
     private void emit(Queue.Item item, QueueEvent event) {
-        EventstoreConfiguration.getPublisher().send(new StreamId("queue", item.task.getName() + "-" + event.queueId), event);
+        EventstoreConfiguration.send(new StreamId("queue", item.task.getName() + "-" + event.queueId), event);
     }
 
     private void emit(Job job, QueueEvent event) {
-        EventstoreConfiguration.getPublisher().send(new StreamId("build", job.getName() + "-" + job.getNextBuildNumber()), event);
+        EventstoreConfiguration.send(new StreamId("build", job.getName() + "-" + job.getNextBuildNumber()), event);
     }
 
 }

@@ -2,8 +2,10 @@ package org.jenkinsci.plugins.eventstore.publishing;
 
 import net.sf.json.JSONArray;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.commons.httpclient.params.HttpClientParams;
 import org.jenkinsci.plugins.eventstore.events.Event;
 import org.jenkinsci.plugins.eventstore.events.StreamId;
 
@@ -18,11 +20,14 @@ public final class EventstorePublisher {
     private static final String PATH_PREFIX = "/streams/";
 
     private final String uriPrefix;
-    private final HttpClient httpClient = new HttpClient();
+    private final HttpClient httpClient;
 
     public EventstorePublisher(String eventstoreUrl) {
         this.uriPrefix = eventstoreUrl + PATH_PREFIX;
         LOG.info(String.format("Connecting to eventstore at %s with category %s", eventstoreUrl, "jenkins"));
+        HttpClientParams params = new HttpClientParams();
+        params.setConnectionManagerTimeout(1000L);
+        httpClient = new HttpClient(params);
     }
 
     public void send(StreamId streamId, Event event) {
@@ -37,7 +42,7 @@ public final class EventstorePublisher {
             if (responseCode >= 400) {
                 LOG.log(Level.SEVERE, responseCode + " " + Arrays.deepToString(post.getResponseHeaders()));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Unable to send to Event Store", e);
         }
     }
