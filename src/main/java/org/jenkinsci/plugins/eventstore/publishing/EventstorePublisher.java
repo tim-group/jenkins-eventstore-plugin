@@ -20,7 +20,7 @@ public final class EventstorePublisher {
     private final HttpClient httpClient = new HttpClient();
 
     public EventstorePublisher(String eventstoreHost, int eventstorePort) {
-        this.uri = "http://" + eventstoreHost + ":" + eventstorePort + "/streams/test";
+        this.uri = "http://" + eventstoreHost + ":" + eventstorePort + "/streams/jenkins-";
         LOG.info(String.format("Connecting to eventstore at %s:%s", eventstoreHost, eventstorePort));
     }
 
