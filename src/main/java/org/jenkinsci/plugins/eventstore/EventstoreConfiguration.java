@@ -55,7 +55,7 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
     }
 
     private void createPublisher() {
-        this.publisher = new EventstorePublisher(eventstoreHost, eventstorePort);
+        this.publisher = new EventstorePublisher("http://" + eventstoreHost + ":" + eventstorePort);
     }
 
     public static EventstorePublisher getPublisher() {

@@ -6,6 +6,7 @@ import hudson.model.BuildListener;
 import hudson.tasks.BuildStep;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
 import org.jenkinsci.plugins.eventstore.events.Event;
+import org.jenkinsci.plugins.eventstore.events.StreamId;
 import org.jenkinsci.plugins.eventstore.events.buildstep.BuildStepFinished;
 import org.jenkinsci.plugins.eventstore.events.buildstep.BuildStepStarted;
 
@@ -14,29 +15,33 @@ public final class BuildStepListener extends hudson.model.BuildStepListener {
 
     @Override
     public void started(AbstractBuild abstractBuild, BuildStep buildStep, BuildListener buildListener) {
-        emit(new BuildStepStarted(
+        emit(abstractBuild,
+            new BuildStepStarted(
                 abstractBuild.getProject().getFullName(),
                 abstractBuild.getNumber(),
                 abstractBuild.getTimeInMillis(),
                 abstractBuild.getStartTimeInMillis(),
                 buildStep.getClass().getSimpleName()
-        ));
+            )
+        );
     }
 
     @Override
     public void finished(AbstractBuild abstractBuild, BuildStep buildStep, BuildListener buildListener, boolean canContinue) {
-        emit(new BuildStepFinished(
+        emit(abstractBuild,
+            new BuildStepFinished(
                 abstractBuild.getProject().getFullName(),
                 abstractBuild.getNumber(),
                 abstractBuild.getTimeInMillis(),
                 abstractBuild.getStartTimeInMillis(),
                 buildStep.getClass().getSimpleName(),
                 canContinue
-        ));
+            )
+        );
     }
 
-    private void emit(Event event) {
-        EventstoreConfiguration.getPublisher().send(event);
+    private void emit(AbstractBuild build, Event event) {
+        EventstoreConfiguration.getPublisher().send(new StreamId("build", build.getProject().getFullName() + "-" + build.getNumber()), event);
     }
     
 }

@@ -6,14 +6,14 @@ import static org.jenkinsci.plugins.eventstore.DateUtil.epochToIsoDateString;
 
 public final class LeftWaitingQueue implements Event {
 
-    public final long id;
-    public final String name;
+    public final long queueId;
+    public final String jobName;
     public final String enteredQueueTimestamp;
     public final String effectiveTimestamp;
 
-    public LeftWaitingQueue(long id, String name, long inQueueSinceMillis, long timeInMillis) {
-        this.id = id;
-        this.name = name;
+    public LeftWaitingQueue(long queueId, String jobName, long inQueueSinceMillis, long timeInMillis) {
+        this.queueId = queueId;
+        this.jobName = jobName;
         this.enteredQueueTimestamp = epochToIsoDateString(inQueueSinceMillis);
         this.effectiveTimestamp = epochToIsoDateString(timeInMillis);
     }

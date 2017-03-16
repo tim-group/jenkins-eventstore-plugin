@@ -6,14 +6,14 @@ import static org.jenkinsci.plugins.eventstore.DateUtil.epochToIsoDateString;
 
 public final class LeftBuildableQueue implements Event {
 
-    public final long id;
-    public final String name;
+    public final long queueId;
+    public final String jobName;
     public final String enteredQueueTimestamp;
     public final String buildableStartTimestamp;
 
-    public LeftBuildableQueue(long id, String name, long inQueueSinceMillis, long buildableStartMillis) {
-        this.id = id;
-        this.name = name;
+    public LeftBuildableQueue(long queueId, String jobName, long inQueueSinceMillis, long buildableStartMillis) {
+        this.queueId = queueId;
+        this.jobName = jobName;
         this.enteredQueueTimestamp = epochToIsoDateString(inQueueSinceMillis);
         this.buildableStartTimestamp = epochToIsoDateString(buildableStartMillis);
     }
