@@ -1,5 +1,8 @@
 package org.jenkinsci.plugins.eventstore.events;
 
+import org.apache.commons.httpclient.URIException;
+import org.apache.commons.httpclient.util.URIUtil;
+
 public final class StreamId {
     public final String category;
     public final String id;
@@ -9,7 +12,7 @@ public final class StreamId {
         this.id = id;
     }
 
-    public String toSuffix() {
-        return category + "-" + id;
+    public String toSuffix() throws URIException {
+        return category + "-" + URIUtil.encodePath(id);
     }
 }

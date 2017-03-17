@@ -31,8 +31,8 @@ public final class EventstorePublisher {
     }
 
     public void send(StreamId streamId, Event event) {
-        PostMethod post = new PostMethod(uriPrefix + streamId.toSuffix());
         try {
+            PostMethod post = new PostMethod(uriPrefix + streamId.toSuffix());
             EventstoreEvent eventstoreEvent = new EventstoreEvent(UUID.randomUUID().toString(), event.getClass().getSimpleName(), event);
 
             String payload = JSONArray.fromObject(new EventstoreEvent[] {eventstoreEvent}).toString();
