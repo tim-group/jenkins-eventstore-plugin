@@ -14,4 +14,9 @@ public abstract class QueueEvent implements Event {
         this.jobName = jobName;
         this.enteredQueueTimestamp = epochToIsoDateString(inQueueSinceMillis);
     }
+
+    @Override
+    public final String category() {
+        return "queue";
+    }
 }

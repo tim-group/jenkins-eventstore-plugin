@@ -10,4 +10,9 @@ public abstract class BuildEvent implements Event {
         this.jobName = jobName;
         this.buildNumber = buildNumber;
     }
+
+    @Override
+    public final String category() {
+        return "build";
+    }
 }
