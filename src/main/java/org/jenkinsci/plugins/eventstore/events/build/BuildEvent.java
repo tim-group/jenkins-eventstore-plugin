@@ -1,6 +1,8 @@
 package org.jenkinsci.plugins.eventstore.events.build;
 
+import org.jenkinsci.plugins.eventstore.HashUtil;
 import org.jenkinsci.plugins.eventstore.events.Event;
+import org.jenkinsci.plugins.eventstore.events.StreamId;
 
 public abstract class BuildEvent implements Event {
     public final String jobName;
@@ -12,7 +14,7 @@ public abstract class BuildEvent implements Event {
     }
 
     @Override
-    public final String category() {
-        return "build";
+    public final StreamId streamId() {
+        return new StreamId("build", HashUtil.hash(jobName + "-" + buildNumber));
     }
 }

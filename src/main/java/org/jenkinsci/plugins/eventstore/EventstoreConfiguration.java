@@ -57,10 +57,10 @@ public final class EventstoreConfiguration extends GlobalConfiguration {
         return url != null;
     }
 
-    public static void send(StreamId streamId, Event event) {
+    public static void send(Event event) {
         EventstorePublisher publisher = get().publisher;
         if (publisher != null) {
-            publisher.send(streamId, event);
+            publisher.send(event.streamId(), event);
         }
     }
 }

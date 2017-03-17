@@ -5,7 +5,6 @@ import hudson.model.Job;
 import hudson.model.Queue;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
 import org.jenkinsci.plugins.eventstore.events.Event;
-import org.jenkinsci.plugins.eventstore.events.StreamId;
 import org.jenkinsci.plugins.eventstore.events.build.BuildLeftQueue;
 import org.jenkinsci.plugins.eventstore.events.queue.*;
 
@@ -14,8 +13,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onEnterWaiting(Queue.WaitingItem wi) {
-        emit(wi,
-             new EnteredWaitingQueue(
+        emit(new EnteredWaitingQueue(
                  wi.getId(),
                  wi.task.getName(),
                  wi.getInQueueSince(),
@@ -26,8 +24,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onLeaveWaiting(Queue.WaitingItem wi) {
-        emit(wi,
-            new LeftWaitingQueue(
+        emit(new LeftWaitingQueue(
                 wi.getId(),
                 wi.task.getName(),
                 wi.getInQueueSince(),
@@ -37,8 +34,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onEnterBlocked(Queue.BlockedItem bi) {
-        emit(bi,
-            new EnteredBlockedQueue(
+        emit(new EnteredBlockedQueue(
                 bi.getId(),
                 bi.task.getName(),
                 bi.getInQueueSince(),
@@ -48,8 +44,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onLeaveBlocked(Queue.BlockedItem bi) {
-        emit(bi,
-            new LeftBlockedQueue(
+        emit(new LeftBlockedQueue(
                 bi.getId(),
                 bi.task.getName(),
                 bi.getInQueueSince(),
@@ -59,8 +54,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onEnterBuildable(Queue.BuildableItem bi) {
-        emit(bi,
-            new EnteredBuildableQueue(
+        emit(new EnteredBuildableQueue(
                 bi.getId(),
                 bi.task.getName(),
                 bi.getInQueueSince(),
@@ -70,8 +64,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onLeaveBuildable(Queue.BuildableItem bi) {
-        emit(bi,
-            new LeftBuildableQueue(
+        emit(new LeftBuildableQueue(
                 bi.getId(),
                 bi.task.getName(),
                 bi.getInQueueSince(),
@@ -92,32 +85,26 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
                     li.getInQueueSince(),
                     li.isCancelled()
             );
-            emit(li, leftQueue);
-            emit(job,
-                new BuildLeftQueue(
+            emit(leftQueue);
+            emit(new BuildLeftQueue(
                         li.task.getName(),
                         buildNumber,
                         leftQueue.queueId,
                         leftQueue.enteredQueueTimestamp
                 ));
         } else {
-            emit(li,
-                    new LeftQueue(
-                            li.getId(),
-                            li.task.getName(),
-                            null,
-                            li.getInQueueSince(),
-                            li.isCancelled()
-                    ));
+            emit(new LeftQueue(
+                        li.getId(),
+                        li.task.getName(),
+                        null,
+                        li.getInQueueSince(),
+                        li.isCancelled()
+                ));
         }
     }
 
-    private void emit(Queue.Item item, QueueEvent event) {
-        EventstoreConfiguration.send(new StreamId(event.category(), item.task.getName() + "-" + event.queueId), event);
-    }
-
-    private void emit(Job job, Event event) {
-        EventstoreConfiguration.send(new StreamId(event.category(), job.getName() + "-" + job.getNextBuildNumber()), event);
+    private void emit(Event event) {
+        EventstoreConfiguration.send(event);
     }
 
 }

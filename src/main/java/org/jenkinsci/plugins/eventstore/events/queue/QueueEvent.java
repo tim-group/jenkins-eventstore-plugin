@@ -1,6 +1,8 @@
 package org.jenkinsci.plugins.eventstore.events.queue;
 
+import org.jenkinsci.plugins.eventstore.HashUtil;
 import org.jenkinsci.plugins.eventstore.events.Event;
+import org.jenkinsci.plugins.eventstore.events.StreamId;
 
 import static org.jenkinsci.plugins.eventstore.DateUtil.epochToIsoDateString;
 
@@ -16,7 +18,7 @@ public abstract class QueueEvent implements Event {
     }
 
     @Override
-    public final String category() {
-        return "queue";
+    public final StreamId streamId() {
+        return new StreamId("queue", HashUtil.hash(jobName + "-" + queueId));
     }
 }
