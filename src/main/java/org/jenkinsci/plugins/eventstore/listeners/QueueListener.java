@@ -6,7 +6,7 @@ import hudson.model.Queue;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
 import org.jenkinsci.plugins.eventstore.events.Event;
 import org.jenkinsci.plugins.eventstore.events.StreamId;
-import org.jenkinsci.plugins.eventstore.events.buildstep.BuildStarted;
+import org.jenkinsci.plugins.eventstore.events.buildstep.BuildLeftQueue;
 import org.jenkinsci.plugins.eventstore.events.queue.*;
 
 @Extension
@@ -94,7 +94,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
             );
             emit(li, leftQueue);
             emit(job,
-                new BuildStarted(
+                new BuildLeftQueue(
                         li.task.getName(),
                         buildNumber,
                         leftQueue.queueId,
