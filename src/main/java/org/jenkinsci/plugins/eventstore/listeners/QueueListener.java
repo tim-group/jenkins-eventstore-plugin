@@ -4,7 +4,9 @@ import hudson.Extension;
 import hudson.model.Job;
 import hudson.model.Queue;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
+import org.jenkinsci.plugins.eventstore.events.Event;
 import org.jenkinsci.plugins.eventstore.events.StreamId;
+import org.jenkinsci.plugins.eventstore.events.buildstep.BuildStarted;
 import org.jenkinsci.plugins.eventstore.events.queue.*;
 
 @Extension
@@ -79,30 +81,33 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
 
     @Override
     public void onLeft(Queue.LeftItem li) {
-        if (li.task instanceof Job) {
+        if (!li.isCancelled() && li.task instanceof Job) {
             Job job = (Job) li.task;
             int buildNumber = job.getNextBuildNumber();
-            emit(li,
-                    new LeftQueue(
-                            li.getId(),
-                            li.task.getName(),
-                            buildNumber,
-                            li.getInQueueSince()
-                    ));
-            emit(job,
-                new LeftQueue(
+
+            LeftQueue leftQueue = new LeftQueue(
                     li.getId(),
                     li.task.getName(),
                     buildNumber,
-                    li.getInQueueSince()
-            ));
+                    li.getInQueueSince(),
+                    li.isCancelled()
+            );
+            emit(li, leftQueue);
+            emit(job,
+                new BuildStarted(
+                        li.task.getName(),
+                        buildNumber,
+                        leftQueue.queueId,
+                        leftQueue.enteredQueueTimestamp
+                ));
         } else {
             emit(li,
                     new LeftQueue(
                             li.getId(),
                             li.task.getName(),
                             null,
-                            li.getInQueueSince()
+                            li.getInQueueSince(),
+                            li.isCancelled()
                     ));
         }
     }
@@ -111,7 +116,7 @@ public final class QueueListener extends hudson.model.queue.QueueListener {
         EventstoreConfiguration.send(new StreamId("queue", item.task.getName() + "-" + event.queueId), event);
     }
 
-    private void emit(Job job, QueueEvent event) {
+    private void emit(Job job, Event event) {
         EventstoreConfiguration.send(new StreamId("build", job.getName() + "-" + job.getNextBuildNumber()), event);
     }
 
