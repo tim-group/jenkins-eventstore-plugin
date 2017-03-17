@@ -6,7 +6,7 @@ import hudson.model.Queue;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
 import org.jenkinsci.plugins.eventstore.events.Event;
 import org.jenkinsci.plugins.eventstore.events.StreamId;
-import org.jenkinsci.plugins.eventstore.events.buildstep.BuildLeftQueue;
+import org.jenkinsci.plugins.eventstore.events.build.BuildLeftQueue;
 import org.jenkinsci.plugins.eventstore.events.queue.*;
 
 @Extension

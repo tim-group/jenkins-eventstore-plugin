@@ -7,8 +7,8 @@ import hudson.tasks.BuildStep;
 import org.jenkinsci.plugins.eventstore.EventstoreConfiguration;
 import org.jenkinsci.plugins.eventstore.events.Event;
 import org.jenkinsci.plugins.eventstore.events.StreamId;
-import org.jenkinsci.plugins.eventstore.events.buildstep.BuildStepFinished;
-import org.jenkinsci.plugins.eventstore.events.buildstep.BuildStepStarted;
+import org.jenkinsci.plugins.eventstore.events.build.BuildStepFinished;
+import org.jenkinsci.plugins.eventstore.events.build.BuildStepStarted;
 
 @Extension
 public final class BuildStepListener extends hudson.model.BuildStepListener {

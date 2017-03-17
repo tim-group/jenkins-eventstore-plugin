@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.eventstore.events.buildstep;
+package org.jenkinsci.plugins.eventstore.events.build;
 
 import org.jenkinsci.plugins.eventstore.events.Event;
 

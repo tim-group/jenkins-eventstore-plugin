@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.eventstore.events.buildstep;
+package org.jenkinsci.plugins.eventstore.events.build;
 
 public final class BuildLeftQueue extends BuildEvent {
 
