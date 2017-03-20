@@ -13,6 +13,10 @@ public final class StreamId {
     }
 
     public String toSuffix() throws URIException {
-        return category + "-" + URIUtil.encodePath(id);
+        return category + "-" + URIUtil.encodePath(removeSlashes(id));
+    }
+
+    private String removeSlashes(String id) {
+        return id.replace('/', '\\');
     }
 }

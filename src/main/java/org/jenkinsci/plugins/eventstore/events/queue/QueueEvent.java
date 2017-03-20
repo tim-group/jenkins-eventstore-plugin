@@ -1,6 +1,5 @@
 package org.jenkinsci.plugins.eventstore.events.queue;
 
-import org.jenkinsci.plugins.eventstore.HashUtil;
 import org.jenkinsci.plugins.eventstore.events.Event;
 import org.jenkinsci.plugins.eventstore.events.StreamId;
 
@@ -19,6 +18,6 @@ public abstract class QueueEvent implements Event {
 
     @Override
     public final StreamId streamId() {
-        return new StreamId("queue", HashUtil.hash(jobName + "-" + queueId));
+        return new StreamId("queue", jobName + "-" + queueId);
     }
 }
